@@ -1,0 +1,136 @@
+﻿@model IEnumerable<SchoolDemo.Models.Student>
+@*@model PaginatedList<SchoolDemo.Models.Student>*@
+
+@{
+    ViewData["Title"] = "Index";
+}
+@section Scripts {
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        
+       $. ajax({
+            type:"Get",
+            url:"https://localhost:44300/api/Student/GetAllStudent",
+            dataType:"json",
+            success:function(jsondata){
+                Obj=jsondata;
+                $.each(jsondata,function(i, item){
+                    var rows = "<tr>"+
+                    "<td id='Name'>"+item.name+"</td>"+
+                     "<td id='Fname'>"+item.fname+"</td>"+
+                     "<td id='Email'>"+item.email+"</td>"+
+                      "<td id='Mobile'>"+item.mobile+"</td>"+
+                      "<td id='Description'>"+item.description+"</td>"+
+                       "<td id='Id'>"+item.id+"</td>"+
+                      "<td>"+
+                      "<a class='btn btn-xs btn-warning' href='/home/Edit/"+item.id+"'>Edit</a>"+
+                      " | <a class='btn btn-xs btn-danger' href='/home/Delete/" + item.id + "' id='btndelete' >delete</a>" +
+                    '<div class="hidden-sm hidden-xs btn-group">'+
+                    //'<button class="btn btn-xs btn-danger"  id="save">Delete'+
+                    //    '<i class="ace-icon fa fa-check bigger-120"></i>'+
+                    //'</button>'+
+                '</div>'+  
+                       "</td>" +
+                    "</tr>";
+                    $('#tbody').append(rows);
+                })
+            },
+            error: function (error) {
+            window.alert(error.statusText);
+        }
+       
+        });
+         $('#save').click(function (e) {
+             alert("Button Work");
+         })
+        
+   })
+</script>
+
+
+}
+
+<h1>Index</h1>
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New</a>
+   @* <a asp-action="Mails"> Mail</a>*@
+
+</p>
+<table class="table" id="datatable">
+    <thead>
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Id)*@
+                Id
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Name)*@
+                Name
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Fname)*@
+                Fname
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Email)*@
+                Email
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Mobile)*@
+                Mobile
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Description)*@
+                Description
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.DepartmentId)
+                </th>
+                <th>
+                @Html.DisplayNameFor(model => model.SemId)
+                </th>
+                <th>
+                @Html.DisplayNameFor(model => model.SemName)
+                </th>*@
+            @*<th>
+                @Html.DisplayNameFor(model => model.DepartmentName)
+                </th>
+                <th>
+                @Html.DisplayNameFor(model => model.SemName)
+                </th>*@
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody id="tbody">
+       @* @foreach (var item in Model) {
+            <tr>
+
+            <td>
+            @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Fname)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Description)
+            </td>
+
+            <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id,item.Name,item.Fname,item.Email,item.Mobile,item.Description,item.Department,item.SemName }, new {@class="btn btn-primary"}) |
+
+            @Html.ActionLink("Delete", "Delete", new {  id=item.Id  },new {@class="btn btn-danger",onclick="return confirm('Do you Really Want to Delete This Record?')"})
+            </td>
+            </tr>
+        }*@
+    </tbody>
+</table>
+

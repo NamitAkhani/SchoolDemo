@@ -1,0 +1,125 @@
+﻿@model SchoolDemo.Models.Student
+@{
+    ViewData["Title"] = "Delete";
+}
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Student</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd id="Name" class="col-sm-10">
+            @*@Html.DisplayFor(model => model.stdName)*@
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Fname)
+        </dt>
+        <dd id="Fname" class="col-sm-10">
+            @*@Html.DisplayFor(model => model.stdAddress)*@
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd id="Email" class="col-sm-10">
+            @*@Html.DisplayFor(model => model.stdMobileNo)*@
+        </dd>
+         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Mobile)
+        </dt>
+        <dd id="Mobile" class="col-sm-10">
+            @*@Html.DisplayFor(model => model.stdMobileNo)*@
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd id="Description" class="col-sm-10">
+            @*@Html.DisplayFor(model => model.stdMobileNo)*@
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DepartmentId)
+        </dt>
+        <dd id="DepartmentId" class="col-sm-10">
+            @*@Html.DisplayFor(model => model.stdMobileNo)*@
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SemId)
+        </dt>
+        <dd id="SemId" class="col-sm-10">
+            @*@Html.DisplayFor(model => model.stdMobileNo)*@
+        </dd>
+    </dl>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input id="btndelete" type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script>
+        $(document).ready(function ()
+    {
+         var id =@ViewBag.Id;
+        var apiurl = "https://localhost:44300/api/Student/GetStudent/"+id;
+            $.ajax({
+                type: "Get",
+                url: apiurl,
+                dataType: "json",
+                success: function (jsondata)
+                {
+                    if (jsondata == "undefined" || jsondata == null)
+                    {
+                        window.alert("id is not proper...");
+                        location.href = "/home/index";
+                    }
+
+                    $('#Name').append(jsondata.name);
+                    $('#Fname').append(jsondata.fname);
+                    $('#Email').append(jsondata.email);
+                     $('#Mobile').append(jsondata.mobile);
+                      $('#Description').append(jsondata.description);
+                      $('#DepartmentId').append(jsondata.departmentId);
+                      $('#SemId').append(jsondata.semId);
+                },
+                error: function (error) {
+                window.alert(error.statusText);
+            }
+            });
+        $('#btndelete').click(function (e)
+        {
+            e.preventDefault();
+            var url = "https://localhost:44300/api/Student/Delete/"+id;
+            var data =
+            {
+                Id: id,
+                name: $('#name').val(),
+                fname:$('#fname').val(),
+                email:$('#email').val(),
+                mobile:$('#mobile').val(),
+                description:$('#description').val(),
+                departmentId:parseInt($("#departmentId").val()),
+                semId:parseInt($("#semId").val())
+            }
+
+            $.ajax
+          ({
+                url: url,
+                type: 'delete',
+                datatype: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (e) {
+                    location.href = "/home/index";
+                    alert("Data Delete...");
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+
+        });
+    })
+    </script>
+</div>

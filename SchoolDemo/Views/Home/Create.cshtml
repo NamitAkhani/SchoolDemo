@@ -1,0 +1,103 @@
+﻿@model SchoolDemo.ViewModels.StudentCreateViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Student</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="myform">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" id="name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Fname" class="control-label"></label>
+                <input asp-for="Fname" id="fname" class="form-control" />
+                <span asp-validation-for="Fname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" id="email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mobile" class="control-label"></label>
+                <input asp-for="Mobile" id="mobile" class="form-control" />
+                <span asp-validation-for="Mobile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" id="description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            
+             <div class="form-group">
+            <label asp-for="DepartmentId" class="control-label"></label>
+            <select asp-for="DepartmentId" id="departmentId" class="form-control" asp-items="@(new SelectList(ViewBag.dplist,"DepartmentId","DepartmentName"))">
+
+            </select>
+            </div>
+             <div class="form-group">
+                 <label asp-for="SemId" class="control-label"></label>
+                 <select asp-for="SemId" id="semId" class="form-control" asp-items="@(new SelectList(ViewBag.seclist,"SemId","SemName"))">
+                 </select>
+            </div>
+            <div class="form-group">
+                @*<input type="submit" value="Create" class="btn btn-primary" />*@ <input type="button" id="createStudent" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    alert("script run");
+    $(document).ready(function () {
+        $('#createStudent').click(function (e) {
+            e.preventDefault();
+            var apiurl = "https://localhost:44300/api/Student/Add";
+            var data = {
+                name: $('#name').val(),
+                fname: $('#fname').val(),
+                email: $('#email').val(),
+                mobile:$('#mobile').val(),
+                description:$('#description').val(),
+                departmentId:parseInt($("#departmentId").val()),
+                semId:parseInt($("#semId").val()),
+            }
+            $.ajax({
+                url: apiurl,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+               
+                success: function (e)
+                {    console.log(data)
+                    alert(JSON.stringify(data));
+                    location.href = "/home/index";
+                    alert("Data Inserted...");
+                },
+                error: function () {
+                    alert(JSON.stringify(data));
+                    alert("Error");
+                }
+            });
+        });
+    });
+</script>

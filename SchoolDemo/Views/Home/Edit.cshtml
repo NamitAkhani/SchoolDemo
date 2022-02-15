@@ -1,0 +1,127 @@
+﻿@model SchoolDemo.Models.Student
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Student</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" id="myform">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" id="name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Fname" class="control-label"></label>
+                <input asp-for="Fname" id="fname" class="form-control" />
+                <span asp-validation-for="Fname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" id="email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mobile" class="control-label"></label>
+                <input asp-for="Mobile" id="mobile"  class="form-control" />
+                <span asp-validation-for="Mobile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" id="description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+             <div class="form-group">
+            <label asp-for="Department" class="control-label"></label>
+            <select asp-for="DepartmentId" id="departmentId" class="form-control" asp-items="@(new SelectList(ViewBag.dplist,"DepartmentId","DepartmentName"))">
+
+            </select>
+            </div>
+             <div class="form-group">
+                 <label asp-for="sem" class="control-label"></label>
+                 <select asp-for="SemId" id="semId" class="form-control" asp-items="@(new SelectList(ViewBag.seclist,"SemId","SemName"))">
+                 </select>
+            </div>
+           
+           
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    $(document).ready(function(){
+        var id = @ViewBag.id;
+       var apiurl ="https://localhost:44300/api/Student/GetStudent/"+id;
+        $.ajax({
+            type:"Get",
+            url:apiurl,
+             dataType: "json",
+            success:function(jsondata){
+                
+                if (jsondata == "undefined" || jsondata==null) {
+                        window.alert("id is not proper...");
+                    }
+                    $('#name').val(jsondata.name);
+                    $('#fname').val(jsondata.fname);
+                    $('#email').val(jsondata.email);
+                    $('#mobile').val(jsondata.mobile);
+                    $('#description').val(jsondata.description);
+                    $('departmentId').val(jsondata.departmentId);
+                    $('semId').val(jsondata.semId);
+            },
+             error: function (error) {
+                window.alert(error.statusText);
+            }
+        });
+        $('#myform').submit(function(e){
+            e.preventDefault();
+            var apiurl = "https://localhost:44300/api/Student/Update/"+id;
+            var data = 
+            {
+                Id:id,
+                Name :$('#name').val(),
+                Fname:$('#fname').val(),
+                Email:$('#email').val(),
+                Mobile:$('#mobile').val(),
+                Description:$('#description').val(),
+                DepartmentId:parseInt($("#departmentId").val()),
+                SemId:parseInt($("#semId").val())
+            }
+            console.log(JSON.stringify(data))
+            $.ajax({
+                url:apiurl,
+                type:'Put',
+                 datatype: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success:function(response)
+                {
+                    location.href = "/home/index";
+                    alert("Data Updated...");
+                },
+                error:function(){
+                    alert("Error");
+                }
+            });
+        });
+    })
+</script>
